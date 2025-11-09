@@ -1,70 +1,85 @@
-class PokemonBinder:
-    def __init__(self):
-        self.binder = {}
-        self.MAX_POKEDEX = 1025
-        self.CARDS_PER_PAGE = 64
-        self.GRID_SIZE = 8
+student_names = ["Sonam", "Karma", "Leki", "Tshering", "Yeshey", "Tashi", "Nima", "Dema", "Thinley", "Pema",
+                 "Jigme", "Dorji", "Wangmo", "Ugyen", "Sangay"]
 
-    def menu(self):
-        while True:
-            print("\nBinder Menu")
-            print("1. Add Pokemon Card")
-            print("2. Reset Binder")
-            print("3. View Binder")
-            print("4. Return to Main Menu")
-            choice = input("Choose an option: ")
+test_scores = [78, 45, 92, 67, 88, 54, 73, 82, 91, 59, 76, 85, 48, 93, 71, 89, 57, 80, 69, 62]
 
-            if choice == '1':
-                self.add_card()
-            elif choice == '2':
-                self.reset_binder()
-            elif choice == '3':
-                self.view_binder()
-            elif choice == '4':
-                break
-            else:
-                print("Invalid input.")
+book_prices = [450, 230, 678, 125, 890, 560, 330, 150, 770, 980,
+               210, 300, 410, 650, 720]
 
-    def add_card(self):
-        try:
-            number = int(input("Enter Pokedex number (1-1025): "))
-            if number < 1 or number > self.MAX_POKEDEX:
-                print("Invalid Pokedex number.")
-                return
-            if number in self.binder:
-                page, row, col = self.binder[number]
-                print(f"Card already exists on page {page}, position ({row+1},{col+1})")
-            else:
-                index = len(self.binder)
-                page = index // self.CARDS_PER_PAGE + 1
-                pos = index % self.CARDS_PER_PAGE
-                row = pos // self.GRID_SIZE
-                col = pos % self.GRID_SIZE
-                self.binder[number] = (page, row, col)
-                print(f"Added card #{number} on page {page}, position ({row+1},{col+1})")
-                if len(self.binder) == self.MAX_POKEDEX:
-                    print("You have caught them all!")
-        except ValueError:
-            print("Please enter a valid integer.")
 
-    def reset_binder(self):
-        confirm = input("Type 'CONFIRM' to reset or 'EXIT' to cancel: ")
-        if confirm == 'CONFIRM':
-            self.binder.clear()
-            print("Binder has been reset.")
-        else:
-            print("Reset cancelled.")
+def bubble_sort(lst):
+    n = len(lst)
+    arr = lst.copy()
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+    return arr
 
-    def view_binder(self):
-        print("\nCurrent Cards in Binder:")
-        for number in sorted(self.binder):
-            page, row, col = self.binder[number]
-            print(f"#{number}: Page {page}, Position ({row+1},{col+1})")
-        print(f"Total cards: {len(self.binder)}")
-        percent = len(self.binder) / self.MAX_POKEDEX * 100
-        print(f"Completion: {percent:.2f}%")
 
-if __name__ == "__main__":
-    binder_app = PokemonBinder()
-    binder_app.menu()
+def insertion_sort(lst):
+    arr = lst.copy()
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and key < arr[j]:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+    return arr
 
+
+recursive_calls = 0
+def quick_sort(arr):
+    global recursive_calls
+    recursive_calls += 1
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[0]
+    left = [x for x in arr[1:] if x <= pivot]
+    right = [x for x in arr[1:] if x > pivot]
+    return quick_sort(left) + [pivot] + quick_sort(right)
+
+
+while True:
+    print("\n=== Sorting Algorithms Menu ===")
+    print("Select a sorting operation (1-4):")
+    print("1. Bubble Sort - Sort Student Names")
+    print("2. Insertion Sort - Sort Test Scores")
+    print("3. Quick Sort - Sort Book Prices")
+    print("4. Exit program")
+
+    choice = input("Enter your choice: ")
+
+    if choice == '1':
+        print("Original names:", student_names)
+        result = bubble_sort(student_names)
+        print("Sorted names:", result)
+
+    elif choice == '2':
+        print("Original scores:", test_scores)
+        result = insertion_sort(test_scores)
+        print("Sorted scores:", result)
+        print("\nTop 5 Scores:")
+        top5 = sorted(result, reverse=True)[:5]
+        for i, val in enumerate(top5, start=1):
+            print(f"{i}. {val}")
+
+    elif choice == '3':
+        print("Original prices:", book_prices)
+        recursive_calls = 0
+        result = quick_sort(book_prices.copy())
+        print("Sorted prices:", result)
+        print("Recursive calls made:", recursive_calls)
+
+    elif choice == '4':
+        print("Thank you for using the sorting program!")
+        break
+
+    else:
+        print("Invalid choice! Please select 1-4.")
+
+    again = input("Would you like to perform another sort? (y/n): ")
+    if again.lower() != 'y':
+        print("Thank you for using the sorting program!")
+        break
